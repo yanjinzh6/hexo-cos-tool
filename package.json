@@ -1,0 +1,12 @@
+{
+  "name": "hexo-cos-tool",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:yanjinzh6/hexo-cos-tool.git",
+  "author": "yanjinzh6 <yanjinzh6@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cos-nodejs-sdk-v5": "^2.5.14",
+    "tencentcloud-sdk-nodejs": "^3.0.111"
+  }
+}
