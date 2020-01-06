@@ -106,10 +106,7 @@ function updateFolder(folder, parentFolder) {
           return
         }
         if (stat.isFile()) {
-          if (data.length > 1) {
-            // 目录下的文件数量超过 1, 那就说明存在其他资源文件
-            replaceImageUrl(fileDir, parentFolder)
-          }
+          fixFile(data, fileDir, parentFolder)
           console.log('上传文件: ', fileDir)
           putObject(fileDir)
         } else if (stat.isDirectory()) {
@@ -121,14 +118,7 @@ function updateFolder(folder, parentFolder) {
   })
 }
 
-/**
- * 通过对比文件夹名称来修改 html 中图片路径
- * 逻辑就是递归整个目录，当目录中存在包含 html 文件的子目录时，
- * 就判断 html 中是否包含目录名称的图片路径
- * @param {String} fileName 文件全路径
- * @param {String} parentFolder 文件夹名称
- */
-function replaceImageUrl(fileName, parentFolder) {
+function fixFile(data, fileName, parentFolder) {
   if (!parentFolder) {
     return
   }
@@ -137,20 +127,49 @@ function replaceImageUrl(fileName, parentFolder) {
     return
   }
   console.log('当前文件夹为: ', parentFolder)
-  const data = fs.readFileSync(fileName, { encoding: 'UTF-8' })
-  if (!data) {
+  const file = fs.readFileSync(fileName, { encoding: 'UTF-8' })
+  if (!file) {
     return
   }
-  const cur = `<img src="${parentFolder}/`
-  const reg = new RegExp(cur, 'g')
-  if (data.indexOf(cur) < 0) {
-    return
+  let result
+  if (data.length > 1) {
+    // 目录下的文件数量超过 1, 那就说明存在其他资源文件
+    result = replaceImageUrl(file, parentFolder)
   }
-  console.log('匹配文件: ', fileName, cur)
-  const result = data.replace(reg, '<img src="')
-  fs.writeFileSync(fileName, result, { encoding: 'UTF-8' })
-  console.log('写入文件: ', fileName)
+  if (result) {
+    result = replaceEmoji(result)
+  } else {
+    result = replaceEmoji(file)
+  }
+  if (result) {
+    fs.writeFileSync(fileName, result, { encoding: 'UTF-8' })
+    console.log('写入文件: ', fileName)
+  }
 }
 
-// sendPurgePathCacheRequest()
+/**
+ * 通过对比文件夹名称来修改 html 中图片路径
+ * 逻辑就是递归整个目录，当目录中存在包含 html 文件的子目录时，
+ * 就判断 html 中是否包含目录名称的图片路径
+ * @param {String} file 文件内容
+ * @param {String} parentFolder 文件夹名称
+ */
+function replaceImageUrl(file, parentFolder) {
+  return replace(file, `<img src="${parentFolder}/`, '<img src="')
+}
+
+function replaceEmoji(file) {
+  return replace(file, '<span class="github-emoji" style="background-image: url.*?\\)"', '<span class="github-emoji" style="background-image: none;"')
+}
+
+function replace(file, cur, rep) {
+  const reg = new RegExp(cur, 'g')
+  if (!reg.test(file)) {
+    return
+  }
+  console.log('匹配 ', cur)
+  return file.replace(reg, rep)
+}
+
+sendPurgePathCacheRequest()
 updateFolder(config.filePath)
