@@ -136,11 +136,11 @@ function fixFile(data, fileName, parentFolder) {
     // 目录下的文件数量超过 1, 那就说明存在其他资源文件
     result = replaceImageUrl(file, parentFolder)
   }
-  if (result) {
+  /* if (result) {
     result = replaceEmoji(result)
   } else {
     result = replaceEmoji(file)
-  }
+  } */
   if (result) {
     fs.writeFileSync(fileName, result, { encoding: 'UTF-8' })
     console.log('写入文件: ', fileName)
