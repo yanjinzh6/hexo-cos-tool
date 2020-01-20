@@ -155,7 +155,7 @@ function fixFile(data, fileName, parentFolder) {
  * @param {String} parentFolder 文件夹名称
  */
 function replaceImageUrl(file, parentFolder) {
-  return replace(file, `<img src="${parentFolder}/`, '<img src="')
+  return replace(file, `<img src="/${parentFolder}/`, '<img src="')
 }
 
 function replaceEmoji(file) {
