@@ -155,7 +155,8 @@ function fixFile(data, fileName, parentFolder) {
  * @param {String} parentFolder 文件夹名称
  */
 function replaceImageUrl(file, parentFolder) {
-  return replace(file, `<img src="/${parentFolder}/`, '<img src="')
+  // 将相对路径替换为绝对路径
+  return replace(file, `<img src="./${parentFolder}/`, `<img src="/${parentFolder}/`)
 }
 
 function replaceEmoji(file) {
