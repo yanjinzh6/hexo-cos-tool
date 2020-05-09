@@ -132,7 +132,8 @@ function fixFile(data, fileName, parentFolder) {
     return
   }
   let result
-  if (data.length > 1) {
+  // 分页里面的页面需要处理
+  if (data.length > 1 || fileName.indexOf('public/page') > 0) {
     // 目录下的文件数量超过 1, 那就说明存在其他资源文件
     result = replaceImageUrl(file, parentFolder)
   }
@@ -156,7 +157,8 @@ function fixFile(data, fileName, parentFolder) {
  */
 function replaceImageUrl(file, parentFolder) {
   // 将相对路径替换为绝对路径
-  return replace(file, `<img src="./${parentFolder}/`, `<img src="/${parentFolder}/`)
+  // return replace(file, `<img src="./${parentFolder}/`, `<img src="/${parentFolder}/`)
+  return replace(file, `<img src=".`, `<img src="`)
 }
 
 function replaceEmoji(file) {
