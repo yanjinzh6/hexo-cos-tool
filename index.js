@@ -174,5 +174,5 @@ function replace(file, cur, rep) {
   return file.replace(reg, rep)
 }
 
-sendPurgePathCacheRequest()
 updateFolder(config.filePath)
+sendPurgePathCacheRequest()
